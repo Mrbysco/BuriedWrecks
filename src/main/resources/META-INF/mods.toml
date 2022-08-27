@@ -1,0 +1,26 @@
+modLoader="javafml"
+loaderVersion="[40,)"
+issueTrackerURL="https://github.com/Mrbysco/buriedwrecks/issues"
+license="MIT"
+
+[[mods]]
+modId="buriedwrecks"
+version="${file.jarVersion}"
+displayName="Buried Wrecks"
+displayURL="https://www.curseforge.com/minecraft/mc-mods/buriedwrecks"
+authors="Mrbysco"
+description='''
+I buried your ship wrecks... sorry
+'''
+[[dependencies.buriedwrecks]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.18.2,1.19)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.buriedwrecks]]
+modId="forge"
+mandatory=true
+versionRange="[40.0.41,)"
+ordering="NONE"
+side="BOTH"

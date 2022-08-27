@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "buriedwrecks:buried_shipwreck",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "salt": 15869703,
+    "spacing": 24,
+    "separation": 4,
+    "type": "minecraft:random_spread"
+  }
+}
