@@ -7,6 +7,7 @@ import com.mrbysco.buriedwrecks.structure.BuriedShipwreckPieces;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.levelgen.GenerationStep.Decoration;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.level.levelgen.structure.pieces.PieceGenerator;
 import net.minecraft.world.level.levelgen.structure.pieces.PieceGeneratorSupplier;
@@ -18,7 +19,7 @@ public class BuriedWreckFeature extends StructureFeature<BuriedShipwreckConfigur
 	}
 
 	private static boolean checkLocation(PieceGeneratorSupplier.Context<BuriedShipwreckConfiguration> configurationContext) {
-		return true;
+		return configurationContext.validBiomeOnTop(Heightmap.Types.WORLD_SURFACE_WG);
 	}
 
 	private static void generatePieces(StructurePiecesBuilder piecesBuilder, PieceGenerator.Context<BuriedShipwreckConfiguration> configurationContext) {
