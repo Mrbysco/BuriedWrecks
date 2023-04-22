@@ -1,9 +1,0 @@
-{
-  "config": {
-    "is_beached": false,
-	"y_level": -20
-  },
-  "biomes": "#buriedwrecks:has_structure/buried_shipwreck",
-  "spawn_overrides": {},
-  "type": "buriedwrecks:buried_shipwreck"
-}

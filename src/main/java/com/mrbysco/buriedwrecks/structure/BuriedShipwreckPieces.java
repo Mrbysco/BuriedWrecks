@@ -1,16 +1,16 @@
 package com.mrbysco.buriedwrecks.structure;
 
 import com.mrbysco.buriedwrecks.BuriedWrecks;
-import com.mrbysco.buriedwrecks.feature.configuration.BuriedShipwreckConfiguration;
 import com.mrbysco.buriedwrecks.registry.ModStructurePieceTypes;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.StructureFeatureManager;
+import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
@@ -21,12 +21,11 @@ import net.minecraft.world.level.levelgen.structure.StructurePieceAccessor;
 import net.minecraft.world.level.levelgen.structure.TemplateStructurePiece;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
 import net.minecraft.world.level.levelgen.structure.templatesystem.BlockIgnoreProcessor;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 
 import java.util.Map;
-import java.util.Random;
 
 public class BuriedShipwreckPieces {
 	static final BlockPos PIVOT = new BlockPos(4, 0, 15);
@@ -68,23 +67,23 @@ public class BuriedShipwreckPieces {
 			"treasure_chest", BuiltInLootTables.SHIPWRECK_TREASURE,
 			"supply_chest", BuiltInLootTables.SHIPWRECK_SUPPLY);
 
-	public static void addPieces(StructureManager structureManager, BlockPos pos, Rotation rotation, StructurePieceAccessor pieceAccessor, Random random, BuriedShipwreckConfiguration configuration) {
-		ResourceLocation resourcelocation = Util.getRandom(configuration.isBeached ? STRUCTURE_LOCATION_BEACHED : STRUCTURE_LOCATION_OCEAN, random);
-		pieceAccessor.addPiece(new BuriedShipwreckPiece(structureManager, resourcelocation, pos, rotation, configuration.isBeached));
+	public static void addPieces(StructureTemplateManager templateManager, BlockPos pos, Rotation rotation, StructurePieceAccessor pieceAccessor, RandomSource randomSource, boolean isBeached) {
+		ResourceLocation resourcelocation = Util.getRandom(isBeached ? STRUCTURE_LOCATION_BEACHED : STRUCTURE_LOCATION_OCEAN, randomSource);
+		pieceAccessor.addPiece(new BuriedShipwreckPiece(templateManager, resourcelocation, pos, rotation, isBeached));
 	}
 
 	public static class BuriedShipwreckPiece extends TemplateStructurePiece {
 		private final boolean isBeached;
 
-		public BuriedShipwreckPiece(StructureManager structureManager, ResourceLocation structureLocation, BlockPos pos, Rotation rotation, boolean beached) {
-			super(ModStructurePieceTypes.BURIED_SHIPWRECK_PIECE.get(), 0, structureManager, structureLocation,
-					structureLocation.toString(), makeSettings(rotation), pos);
+		public BuriedShipwreckPiece(StructureTemplateManager templateManager, ResourceLocation structureLocation, BlockPos pos, Rotation rotation, boolean beached) {
+			super(ModStructurePieceTypes.BURIED_SHIPWRECK_PIECE.get(), 0, templateManager, structureLocation, structureLocation.toString(), makeSettings(rotation), pos);
 			this.isBeached = beached;
 		}
 
-		public BuriedShipwreckPiece(StructurePieceSerializationContext structurePieceSerializationContext, CompoundTag tag) {
-			super(ModStructurePieceTypes.BURIED_SHIPWRECK_PIECE.get(), tag, structurePieceSerializationContext.structureManager(), (location) ->
-					makeSettings(Rotation.valueOf(tag.getString("Rot"))));
+		public BuriedShipwreckPiece(StructureTemplateManager templateManager, CompoundTag tag) {
+			super(ModStructurePieceTypes.BURIED_SHIPWRECK_PIECE.get(), tag, templateManager, (p_229383_) -> {
+				return makeSettings(Rotation.valueOf(tag.getString("Rot")));
+			});
 			this.isBeached = tag.getBoolean("isBeached");
 		}
 
@@ -99,15 +98,15 @@ public class BuriedShipwreckPieces {
 					.addProcessor(BlockIgnoreProcessor.STRUCTURE_AND_AIR);
 		}
 
-		protected void handleDataMarker(String marker, BlockPos pos, ServerLevelAccessor levelAccessor, Random random, BoundingBox boundingBox) {
+		protected void handleDataMarker(String marker, BlockPos pos, ServerLevelAccessor levelAccessor, RandomSource random, BoundingBox boundingBox) {
 			ResourceLocation resourcelocation = BuriedShipwreckPieces.MARKERS_TO_LOOT.get(marker);
 			if (resourcelocation != null) {
 				RandomizableContainerBlockEntity.setLootTable(levelAccessor, random, pos.below(), resourcelocation);
 			}
 		}
 
-		public void postProcess(WorldGenLevel worldGenLevel, StructureFeatureManager featureManager, ChunkGenerator chunkGenerator,
-								Random random, BoundingBox boundingBox, ChunkPos chunkPos, BlockPos pos) {
+		public void postProcess(WorldGenLevel worldGenLevel, StructureManager structureManager, ChunkGenerator chunkGenerator,
+								RandomSource random, BoundingBox boundingBox, ChunkPos chunkPos, BlockPos pos) {
 			int i = worldGenLevel.getMaxBuildHeight();
 			int j = pos.getY();
 
@@ -115,7 +114,7 @@ public class BuriedShipwreckPieces {
 			int i1 = this.isBeached ? i - vec3i.getY() / 2 - random.nextInt(3) : j;
 			this.templatePosition = new BlockPos(this.templatePosition.getX(), i1, this.templatePosition.getZ());
 
-			super.postProcess(worldGenLevel, featureManager, chunkGenerator, random, boundingBox, chunkPos, pos);
+			super.postProcess(worldGenLevel, structureManager, chunkGenerator, random, boundingBox, chunkPos, pos);
 		}
 	}
 }

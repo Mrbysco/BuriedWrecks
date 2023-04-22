@@ -1,19 +1,18 @@
 package com.mrbysco.buriedwrecks.datagen;
 
 import com.mrbysco.buriedwrecks.BuriedWrecks;
-import com.mrbysco.buriedwrecks.feature.ConfiguredBuriedStructureTags;
-import com.mrbysco.buriedwrecks.registry.ModConfiguredStructureFeatures;
+import com.mrbysco.buriedwrecks.registry.ModStructures;
 import com.mrbysco.buriedwrecks.util.BuriedBiomeTags;
 import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.tags.BiomeTagsProvider;
 import net.minecraft.data.tags.TagsProvider;
-import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
-import net.minecraftforge.common.Tags.Biomes;
+import net.minecraft.tags.BiomeTags;
+import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 
 import javax.annotation.Nullable;
 
@@ -24,23 +23,23 @@ public class BuriedDatagen {
 		DataGenerator generator = event.getGenerator();
 		ExistingFileHelper helper = event.getExistingFileHelper();
 
-		generator.addProvider(new BuriedStructureFeatureTagProvider(generator, helper));
-		generator.addProvider(new BuriedBiomeTagProvider(generator, helper));
+		generator.addProvider(event.includeServer(), new BuriedStructureFeatureTagProvider(generator, helper));
+		generator.addProvider(event.includeServer(), new BuriedBiomeTagProvider(generator, helper));
 	}
 
-	public static class BuriedStructureFeatureTagProvider extends TagsProvider<ConfiguredStructureFeature<?, ?>> {
+	public static class BuriedStructureFeatureTagProvider extends TagsProvider<Structure> {
 		public BuriedStructureFeatureTagProvider(DataGenerator generator, @Nullable ExistingFileHelper existingFileHelper) {
-			super(generator, BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE, BuriedWrecks.MOD_ID, existingFileHelper);
+			super(generator, BuiltinRegistries.STRUCTURES, BuriedWrecks.MOD_ID, existingFileHelper);
 		}
 
 		@Override
 		protected void addTags() {
-			this.tag(ConfiguredBuriedStructureTags.BURIED_WRECK)
-					.add(ModConfiguredStructureFeatures.BURIED_SHIPWRECK.getKey());
+			this.tag(BuriedWrecks.HAS_BURIED_WRECK)
+					.add(ModStructures.BURIED_SHIPWRECK.getKey());
 		}
 
 		public String getName() {
-			return "Configured Buried Wrecks Feature Tags";
+			return "Buried Wrecks Structure Tags";
 		}
 	}
 
@@ -52,7 +51,7 @@ public class BuriedDatagen {
 		@Override
 		protected void addTags() {
 			this.tag(BuriedBiomeTags.HAS_BURIED_SHIPWRECK)
-					.addTag(Biomes.IS_OVERWORLD);
+					.addTag(BiomeTags.IS_OVERWORLD);
 		}
 	}
 }
