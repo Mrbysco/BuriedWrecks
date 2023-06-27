@@ -20,7 +20,7 @@ public class BuriedWrecks {
 	public static final String MOD_ID = "buriedwrecks";
 	public static final Logger LOGGER = LogUtils.getLogger();
 
-	public static TagKey<Structure> HAS_BURIED_WRECK = TagKey.create(Registries.STRUCTURE, new ResourceLocation(BuriedWrecks.MOD_ID + ":has_buried_wreck"));
+	public static TagKey<Structure> HAS_BURIED_WRECK = TagKey.create(Registries.STRUCTURE, new ResourceLocation(BuriedWrecks.MOD_ID, "has_buried_wreck"));
 
 	public BuriedWrecks() {
 		IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
