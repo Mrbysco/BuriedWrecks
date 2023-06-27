@@ -2,7 +2,7 @@
   "type": "buriedwrecks:buried_shipwreck",
   "biomes": "#buriedwrecks:has_structure/buried_shipwreck",
   "is_beached": false,
-  "y_level": -20,
   "spawn_overrides": {},
-  "step": "underground_structures"
+  "step": "underground_structures",
+  "y_level": -20
 }

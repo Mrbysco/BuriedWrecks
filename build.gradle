@@ -94,9 +94,6 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
     maven {
-        url = "https://dvs1.progwml6.com/files/maven"
-    }
-    maven {
         url = "https://maven.blamejared.com"
     }
     maven {
@@ -115,7 +112,7 @@ dependencies {
 
     runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}")
 
-    implementation fg.deobf("curse.maven:cyanide-541676:4126944") //Cyanide
+    implementation fg.deobf("curse.maven:cyanide-541676:4481355") //Cyanide
 }
 
 // Example for how to get properties into the manifest for reading at runtime.
