@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[41,)"
+loaderVersion="[45,)"
 issueTrackerURL="https://github.com/Mrbysco/buriedwrecks/issues"
 license="MIT"
 
@@ -15,12 +15,6 @@ What sort of music did cave men listen to? Hard Rock!
 [[dependencies.buriedwrecks]]
 modId="minecraft"
 mandatory=true
-versionRange="[1.19,1.20)"
-ordering="NONE"
-side="BOTH"
-[[dependencies.buriedwrecks]]
-modId="forge"
-mandatory=true
-versionRange="[41.1.0,)"
+versionRange="[1.19.4,1.20)"
 ordering="NONE"
 side="BOTH"

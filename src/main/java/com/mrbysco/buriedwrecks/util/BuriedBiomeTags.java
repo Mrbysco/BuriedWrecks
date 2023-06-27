@@ -7,9 +7,9 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
 
 public class BuriedBiomeTags {
-	public static final TagKey<Biome> HAS_BURIED_SHIPWRECK = create(BuriedWrecks.MOD_ID + ":has_structure/buried_shipwreck");
+	public static final TagKey<Biome> HAS_BURIED_SHIPWRECK = create("has_structure/buried_shipwreck");
 
 	private static TagKey<Biome> create(String id) {
-		return TagKey.create(Registries.BIOME, new ResourceLocation(id));
+		return TagKey.create(Registries.BIOME, new ResourceLocation(BuriedWrecks.MOD_ID, id));
 	}
 }
