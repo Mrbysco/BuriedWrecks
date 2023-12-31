@@ -8,13 +8,13 @@ import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.RandomizableContainer;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.StructurePieceAccessor;
@@ -81,7 +81,7 @@ public class BuriedShipwreckPieces {
 		}
 
 		public BuriedShipwreckPiece(StructureTemplateManager templateManager, CompoundTag tag) {
-			super(ModStructurePieceTypes.BURIED_SHIPWRECK_PIECE.get(), tag, templateManager, (p_229383_) -> {
+			super(ModStructurePieceTypes.BURIED_SHIPWRECK_PIECE.get(), tag, templateManager, (location) -> {
 				return makeSettings(Rotation.valueOf(tag.getString("Rot")));
 			});
 			this.isBeached = tag.getBoolean("isBeached");
@@ -101,7 +101,7 @@ public class BuriedShipwreckPieces {
 		protected void handleDataMarker(String marker, BlockPos pos, ServerLevelAccessor levelAccessor, RandomSource random, BoundingBox boundingBox) {
 			ResourceLocation resourcelocation = BuriedShipwreckPieces.MARKERS_TO_LOOT.get(marker);
 			if (resourcelocation != null) {
-				RandomizableContainerBlockEntity.setLootTable(levelAccessor, random, pos.below(), resourcelocation);
+				RandomizableContainer.setBlockEntityLootTable(levelAccessor, random, pos.below(), resourcelocation);
 			}
 		}
 

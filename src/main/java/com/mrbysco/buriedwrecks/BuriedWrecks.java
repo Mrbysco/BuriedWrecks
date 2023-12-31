@@ -12,7 +12,6 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
-import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
 
 @Mod(BuriedWrecks.MOD_ID)
@@ -22,8 +21,7 @@ public class BuriedWrecks {
 
 	public static TagKey<Structure> HAS_BURIED_WRECK = TagKey.create(Registries.STRUCTURE, new ResourceLocation(BuriedWrecks.MOD_ID, "has_buried_wreck"));
 
-	public BuriedWrecks() {
-		IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+	public BuriedWrecks(IEventBus eventBus) {
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, BuriedConfig.commonSpec);
 
 		ModStructureTypes.STRUCTURE_TYPES.register(eventBus);

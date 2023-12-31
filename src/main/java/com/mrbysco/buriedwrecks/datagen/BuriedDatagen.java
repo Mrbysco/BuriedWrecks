@@ -4,6 +4,7 @@ import com.mrbysco.buriedwrecks.BuriedWrecks;
 import com.mrbysco.buriedwrecks.registry.ModStructureSets;
 import com.mrbysco.buriedwrecks.registry.ModStructures;
 import com.mrbysco.buriedwrecks.util.BuriedBiomeTags;
+import net.minecraft.core.Cloner;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.RegistrySetBuilder;
@@ -16,11 +17,11 @@ import net.minecraft.data.tags.BiomeTagsProvider;
 import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.level.levelgen.structure.Structure;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
@@ -37,22 +38,28 @@ public class BuriedDatagen {
 
 
 		generator.addProvider(event.includeServer(), new DatapackBuiltinEntriesProvider(
-				packOutput, lookupProvider, Set.of(BuriedWrecks.MOD_ID)));
+				packOutput, CompletableFuture.supplyAsync(BuriedDatagen::getPatchedRegistries), Set.of(BuriedWrecks.MOD_ID)));
 
 		generator.addProvider(event.includeServer(), new BuriedStructureFeatureTagProvider(packOutput, lookupProvider, helper));
 		generator.addProvider(event.includeServer(), new BuriedBiomeTagProvider(packOutput, lookupProvider, helper));
 	}
 
-	private static HolderLookup.Provider getProvider() {
+	private static RegistrySetBuilder.PatchedRegistries getPatchedRegistries() {
 		final RegistrySetBuilder registryBuilder = new RegistrySetBuilder();
 		registryBuilder.add(Registries.STRUCTURE, ModStructures::bootstrap);
 		registryBuilder.add(Registries.STRUCTURE_SET, ModStructureSets::bootstrap);
 
-		// We need the BIOME registry to be present so we can use a biome tag, doesn't matter that it's empty
-		registryBuilder.add(Registries.BIOME, context -> {
+		// We need the BIOME registry to be present, so we can use a biome tag, doesn't matter that it's empty
+		registryBuilder.add(Registries.BIOME, $ -> {
 		});
 		RegistryAccess.Frozen regAccess = RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY);
-		return registryBuilder.buildPatch(regAccess, VanillaRegistries.createLookup());
+		Cloner.Factory cloner$factory = new Cloner.Factory();
+		net.neoforged.neoforge.registries.DataPackRegistriesHooks.getDataPackRegistriesWithDimensions().forEach(p_311524_ -> p_311524_.runWithArguments(cloner$factory::addCodec));
+		return registryBuilder.buildPatch(regAccess, VanillaRegistries.createLookup(), cloner$factory);
+	}
+
+	private static HolderLookup.Provider getProvider() {
+		return getPatchedRegistries().full();
 	}
 
 	public static class BuriedStructureFeatureTagProvider extends TagsProvider<Structure> {
