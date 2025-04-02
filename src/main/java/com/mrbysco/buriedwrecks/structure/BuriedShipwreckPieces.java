@@ -84,9 +84,9 @@ public class BuriedShipwreckPieces {
 
 		public BuriedShipwreckPiece(StructureTemplateManager templateManager, CompoundTag tag) {
 			super(ModStructurePieceTypes.BURIED_SHIPWRECK_PIECE.get(), tag, templateManager, (location) -> {
-				return makeSettings(Rotation.valueOf(tag.getString("Rot")));
+				return makeSettings(Rotation.valueOf(tag.getStringOr("Rot", "")));
 			});
-			this.isBeached = tag.getBoolean("isBeached");
+			this.isBeached = tag.getBooleanOr("isBeached", false);
 		}
 
 		@Override
