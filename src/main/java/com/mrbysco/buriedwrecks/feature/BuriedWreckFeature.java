@@ -13,6 +13,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilder;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
@@ -35,6 +36,7 @@ public class BuriedWreckFeature extends Structure {
 		this.yLevel = yLevel;
 	}
 
+	@NotNull
 	public Optional<GenerationStub> findGenerationPoint(Structure.GenerationContext generationContext) {
 		return onTopOfChunkCenter(generationContext, Heightmap.Types.WORLD_SURFACE_WG, (piecesBuilder) -> {
 			this.generatePieces(piecesBuilder, generationContext);

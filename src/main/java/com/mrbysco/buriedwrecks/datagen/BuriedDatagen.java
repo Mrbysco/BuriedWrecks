@@ -15,14 +15,13 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraft.data.tags.BiomeTagsProvider;
 import net.minecraft.data.tags.TagsProvider;
+import net.minecraft.server.packs.PackType;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -30,20 +29,18 @@ import java.util.concurrent.CompletableFuture;
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
 public class BuriedDatagen {
 	@SubscribeEvent
-	public static void gatherData(GatherDataEvent event) {
+	public static void gatherData(GatherDataEvent.Client event) {
 		DataGenerator generator = event.getGenerator();
 		PackOutput packOutput = generator.getPackOutput();
 		CompletableFuture<HolderLookup.Provider> lookupProvider = CompletableFuture.supplyAsync(BuriedDatagen::getProvider);
-		ExistingFileHelper helper = event.getExistingFileHelper();
 
 
-		generator.addProvider(event.includeServer(), new DatapackBuiltinEntriesProvider(
+		generator.addProvider(true, new DatapackBuiltinEntriesProvider(
 				packOutput, CompletableFuture.supplyAsync(BuriedDatagen::getPatchedRegistries), Set.of(BuriedWrecks.MOD_ID)));
 
-		generator.addProvider(event.includeServer(), new BuriedStructureFeatureTagProvider(packOutput, lookupProvider, helper));
-		generator.addProvider(event.includeServer(), new BuriedBiomeTagProvider(packOutput, lookupProvider, helper));
-		generator.addProvider(event.includeServer(), new StructureUpdater("structure/buried_shipwreck",
-				BuriedWrecks.MOD_ID, helper, packOutput));
+		generator.addProvider(true, new BuriedStructureFeatureTagProvider(packOutput, lookupProvider));
+		generator.addProvider(true, new BuriedBiomeTagProvider(packOutput, lookupProvider));
+		generator.addProvider(true, new StructureUpdater("structure/buried_shipwreck", packOutput, event.getResourceManager(PackType.SERVER_DATA)));
 	}
 
 	private static RegistrySetBuilder.PatchedRegistries getPatchedRegistries() {
@@ -65,9 +62,8 @@ public class BuriedDatagen {
 	}
 
 	public static class BuriedStructureFeatureTagProvider extends TagsProvider<Structure> {
-		public BuriedStructureFeatureTagProvider(PackOutput generator, CompletableFuture<HolderLookup.Provider> completableFuture,
-		                                         @Nullable ExistingFileHelper existingFileHelper) {
-			super(generator, Registries.STRUCTURE, completableFuture, BuriedWrecks.MOD_ID, existingFileHelper);
+		public BuriedStructureFeatureTagProvider(PackOutput generator, CompletableFuture<HolderLookup.Provider> completableFuture) {
+			super(generator, Registries.STRUCTURE, completableFuture, BuriedWrecks.MOD_ID);
 		}
 
 		@Override
@@ -78,9 +74,8 @@ public class BuriedDatagen {
 	}
 
 	public static class BuriedBiomeTagProvider extends BiomeTagsProvider {
-		public BuriedBiomeTagProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> completableFuture,
-		                              @Nullable ExistingFileHelper existingFileHelper) {
-			super(packOutput, completableFuture, BuriedWrecks.MOD_ID, existingFileHelper);
+		public BuriedBiomeTagProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> completableFuture) {
+			super(packOutput, completableFuture, BuriedWrecks.MOD_ID);
 		}
 
 		@Override

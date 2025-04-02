@@ -112,7 +112,7 @@ public class BuriedShipwreckPieces {
 		@Override
 		public void postProcess(WorldGenLevel worldGenLevel, StructureManager structureManager, ChunkGenerator chunkGenerator,
 		                        RandomSource random, BoundingBox boundingBox, ChunkPos chunkPos, BlockPos pos) {
-			int i = worldGenLevel.getMaxBuildHeight();
+			int i = worldGenLevel.getHeight();
 			int j = pos.getY();
 
 			Vec3i vec3i = this.template.getSize();
