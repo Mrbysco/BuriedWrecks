@@ -4,15 +4,14 @@ import com.mrbysco.buriedwrecks.BuriedWrecks;
 import com.mrbysco.buriedwrecks.registry.ModStructureSets;
 import com.mrbysco.buriedwrecks.registry.ModStructures;
 import com.mrbysco.buriedwrecks.util.BuriedBiomeTags;
-import net.minecraft.core.Cloner;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraft.data.tags.BiomeTagsProvider;
 import net.minecraft.data.tags.KeyTagProvider;
 import net.minecraft.server.packs.PackType;
@@ -34,34 +33,29 @@ public class BuriedDatagen {
 	public static void gatherData(GatherDataEvent.Client event) {
 		DataGenerator generator = event.getGenerator();
 		PackOutput packOutput = generator.getPackOutput();
-		CompletableFuture<HolderLookup.Provider> lookupProvider = CompletableFuture.supplyAsync(BuriedDatagen::getProvider);
+		CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
 
+		generator.addProvider(true, new BuriedWrecksDatapackProvider(
+				packOutput, lookupProvider, Set.of(BuriedWrecks.MOD_ID)));
 
-		generator.addProvider(true, new DatapackBuiltinEntriesProvider(
-				packOutput, CompletableFuture.supplyAsync(BuriedDatagen::getPatchedRegistries), Set.of(BuriedWrecks.MOD_ID)));
-
-		generator.addProvider(true, new BuriedStructureFeatureTagProvider(packOutput, lookupProvider));
+		generator.addProvider(true, new BuriedStructureFeatureTagProvider(packOutput, CompletableFuture.supplyAsync(() ->
+				BuriedWrecksDatapackProvider.BUILDER.build(RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY)))) // Otherwise it fails to find structures
+		);
 		generator.addProvider(true, new BuriedBiomeTagProvider(packOutput, lookupProvider));
 		generator.addProvider(true, new StructureUpdater("structure/buried_shipwreck", packOutput, event.getResourceManager(PackType.SERVER_DATA)));
 		generator.addProvider(true, new BuriedStructureLanguageProvider(packOutput));
 	}
 
-	private static RegistrySetBuilder.PatchedRegistries getPatchedRegistries() {
-		final RegistrySetBuilder registryBuilder = new RegistrySetBuilder();
-		registryBuilder.add(Registries.STRUCTURE, ModStructures::bootstrap);
-		registryBuilder.add(Registries.STRUCTURE_SET, ModStructureSets::bootstrap);
+	public static class BuriedWrecksDatapackProvider extends DatapackBuiltinEntriesProvider {
+		public static final RegistrySetBuilder BUILDER = new RegistrySetBuilder()
+				.add(Registries.STRUCTURE, ModStructures::bootstrap)
+				.add(Registries.STRUCTURE_SET, ModStructureSets::bootstrap)
+				.add(Registries.BIOME, $ -> {
+				});
 
-		// We need the BIOME registry to be present, so we can use a biome tag, doesn't matter that it's empty
-		registryBuilder.add(Registries.BIOME, $ -> {
-		});
-		RegistryAccess.Frozen regAccess = RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY);
-		Cloner.Factory cloner$factory = new Cloner.Factory();
-		net.neoforged.neoforge.registries.DataPackRegistriesHooks.getDataPackRegistriesWithDimensions().forEach(p_311524_ -> p_311524_.runWithArguments(cloner$factory::addCodec));
-		return registryBuilder.buildPatch(regAccess, VanillaRegistries.createLookup(), cloner$factory);
-	}
-
-	private static HolderLookup.Provider getProvider() {
-		return getPatchedRegistries().full();
+		public BuriedWrecksDatapackProvider(PackOutput output, CompletableFuture<Provider> registries, Set<String> modIds) {
+			super(output, registries, BUILDER, modIds);
+		}
 	}
 
 	public static class BuriedStructureLanguageProvider extends LanguageProvider {
