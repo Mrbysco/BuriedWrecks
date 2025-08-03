@@ -11,7 +11,7 @@ public class BuriedConfig {
 
 		Common(ModConfigSpec.Builder builder) {
 			builder.comment("Generation settings")
-					.push("Generation");
+					.push("generation");
 
 			overwriteYLevel = builder
 					.comment("Overwrite the default yLevel with the y level specified in 'yLevel' [default: false]")
