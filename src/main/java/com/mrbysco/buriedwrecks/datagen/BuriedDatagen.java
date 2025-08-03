@@ -14,7 +14,7 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraft.data.tags.BiomeTagsProvider;
-import net.minecraft.data.tags.TagsProvider;
+import net.minecraft.data.tags.KeyTagProvider;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.level.levelgen.structure.Structure;
@@ -26,7 +26,7 @@ import net.neoforged.neoforge.data.event.GatherDataEvent;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
-@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber
 public class BuriedDatagen {
 	@SubscribeEvent
 	public static void gatherData(GatherDataEvent.Client event) {
@@ -61,7 +61,7 @@ public class BuriedDatagen {
 		return getPatchedRegistries().full();
 	}
 
-	public static class BuriedStructureFeatureTagProvider extends TagsProvider<Structure> {
+	public static class BuriedStructureFeatureTagProvider extends KeyTagProvider<Structure> {
 		public BuriedStructureFeatureTagProvider(PackOutput generator, CompletableFuture<HolderLookup.Provider> completableFuture) {
 			super(generator, Registries.STRUCTURE, completableFuture, BuriedWrecks.MOD_ID);
 		}
