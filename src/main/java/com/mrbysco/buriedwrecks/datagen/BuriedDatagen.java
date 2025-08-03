@@ -39,7 +39,6 @@ public class BuriedDatagen {
 		generator.addProvider(event.includeServer(), new BuriedWrecksDatapackProvider(
 				packOutput, lookupProvider, Set.of(BuriedWrecks.MOD_ID)));
 
-		generator.addProvider(event.includeServer(), new BuriedStructureFeatureTagProvider(packOutput, lookupProvider, helper));
 		generator.addProvider(event.includeServer(), new BuriedStructureFeatureTagProvider(packOutput, CompletableFuture.supplyAsync(() ->
 				BuriedWrecksDatapackProvider.BUILDER.build(RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY))), helper // Otherwise it fails to find structures
 		));
