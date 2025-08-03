@@ -36,16 +36,13 @@ public class BuriedDatagen {
 		CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
 		ExistingFileHelper helper = event.getExistingFileHelper();
 
-		generator.addProvider(true, new BuriedWrecksDatapackProvider(
+		generator.addProvider(event.includeServer(), new BuriedWrecksDatapackProvider(
 				packOutput, lookupProvider, Set.of(BuriedWrecks.MOD_ID)));
-
-		generator.addProvider(event.includeServer(), new DatapackBuiltinEntriesProvider(
-				packOutput, CompletableFuture.supplyAsync(BuriedDatagen::getPatchedRegistries), Set.of(BuriedWrecks.MOD_ID)));
 
 		generator.addProvider(event.includeServer(), new BuriedStructureFeatureTagProvider(packOutput, lookupProvider, helper));
 		generator.addProvider(event.includeServer(), new BuriedStructureFeatureTagProvider(packOutput, CompletableFuture.supplyAsync(() ->
 				BuriedWrecksDatapackProvider.BUILDER.build(RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY))), helper // Otherwise it fails to find structures
-		);
+		));
 		generator.addProvider(event.includeServer(), new BuriedBiomeTagProvider(packOutput, lookupProvider, helper));
 		generator.addProvider(event.includeServer(), new StructureUpdater("structure/buried_shipwreck",
 				BuriedWrecks.MOD_ID, helper, packOutput));
