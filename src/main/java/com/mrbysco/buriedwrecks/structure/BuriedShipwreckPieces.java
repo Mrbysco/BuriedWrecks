@@ -2,13 +2,13 @@ package com.mrbysco.buriedwrecks.structure;
 
 import com.mrbysco.buriedwrecks.BuriedWrecks;
 import com.mrbysco.buriedwrecks.registry.ModStructurePieceTypes;
-import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.Util;
 import net.minecraft.world.RandomizableContainer;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.ServerLevelAccessor;
@@ -31,7 +31,7 @@ import java.util.Map;
 
 public class BuriedShipwreckPieces {
 	static final BlockPos PIVOT = new BlockPos(4, 0, 15);
-	private static final ResourceLocation[] STRUCTURE_LOCATION_BEACHED = new ResourceLocation[]{
+	private static final Identifier[] STRUCTURE_LOCATION_BEACHED = new Identifier[]{
 			BuriedWrecks.modLoc("buried_shipwreck/with_mast"),
 			BuriedWrecks.modLoc("buried_shipwreck/sideways_full"),
 			BuriedWrecks.modLoc("buried_shipwreck/sideways_fronthalf"),
@@ -43,7 +43,7 @@ public class BuriedShipwreckPieces {
 			BuriedWrecks.modLoc("buried_shipwreck/rightsideup_full_degraded"),
 			BuriedWrecks.modLoc("buried_shipwreck/rightsideup_fronthalf_degraded"),
 			BuriedWrecks.modLoc("buried_shipwreck/rightsideup_backhalf_degraded")};
-	private static final ResourceLocation[] STRUCTURE_LOCATION_OCEAN = new ResourceLocation[]{
+	private static final Identifier[] STRUCTURE_LOCATION_OCEAN = new Identifier[]{
 			BuriedWrecks.modLoc("buried_shipwreck/with_mast"),
 			BuriedWrecks.modLoc("buried_shipwreck/upsidedown_full"),
 			BuriedWrecks.modLoc("buried_shipwreck/upsidedown_fronthalf"),
@@ -70,14 +70,14 @@ public class BuriedShipwreckPieces {
 			"supply_chest", BuiltInLootTables.SHIPWRECK_SUPPLY);
 
 	public static void addPieces(StructureTemplateManager templateManager, BlockPos pos, Rotation rotation, StructurePieceAccessor pieceAccessor, RandomSource randomSource, boolean isBeached) {
-		ResourceLocation resourcelocation = Util.getRandom(isBeached ? STRUCTURE_LOCATION_BEACHED : STRUCTURE_LOCATION_OCEAN, randomSource);
-		pieceAccessor.addPiece(new BuriedShipwreckPiece(templateManager, resourcelocation, pos, rotation, isBeached));
+		Identifier identifier = Util.getRandom(isBeached ? STRUCTURE_LOCATION_BEACHED : STRUCTURE_LOCATION_OCEAN, randomSource);
+		pieceAccessor.addPiece(new BuriedShipwreckPiece(templateManager, identifier, pos, rotation, isBeached));
 	}
 
 	public static class BuriedShipwreckPiece extends TemplateStructurePiece {
 		private final boolean isBeached;
 
-		public BuriedShipwreckPiece(StructureTemplateManager templateManager, ResourceLocation structureLocation, BlockPos pos, Rotation rotation, boolean beached) {
+		public BuriedShipwreckPiece(StructureTemplateManager templateManager, Identifier structureLocation, BlockPos pos, Rotation rotation, boolean beached) {
 			super(ModStructurePieceTypes.BURIED_SHIPWRECK_PIECE.get(), 0, templateManager, structureLocation, structureLocation.toString(), makeSettings(rotation), pos);
 			this.isBeached = beached;
 		}

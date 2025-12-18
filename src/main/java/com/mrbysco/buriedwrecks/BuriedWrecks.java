@@ -5,7 +5,7 @@ import com.mrbysco.buriedwrecks.config.BuriedConfig;
 import com.mrbysco.buriedwrecks.registry.ModStructurePieceTypes;
 import com.mrbysco.buriedwrecks.registry.ModStructureTypes;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.neoforged.api.distmarker.Dist;
@@ -35,7 +35,7 @@ public class BuriedWrecks {
 		}
 	}
 
-	public static ResourceLocation modLoc(String name) {
-		return ResourceLocation.fromNamespaceAndPath(MOD_ID, name);
+	public static Identifier modLoc(String name) {
+		return Identifier.fromNamespaceAndPath(MOD_ID, name);
 	}
 }
