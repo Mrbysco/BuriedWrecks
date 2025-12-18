@@ -22,7 +22,7 @@ public class BuriedWrecks {
 	public static final String MOD_ID = "buriedwrecks";
 	public static final Logger LOGGER = LogUtils.getLogger();
 
-	public static TagKey<Structure> HAS_BURIED_WRECK = TagKey.create(Registries.STRUCTURE, ResourceLocation.fromNamespaceAndPath(BuriedWrecks.MOD_ID, "has_buried_wreck"));
+	public static TagKey<Structure> HAS_BURIED_WRECK = TagKey.create(Registries.STRUCTURE, modLoc("has_buried_wreck"));
 
 	public BuriedWrecks(IEventBus eventBus, Dist dist, ModContainer container) {
 		container.registerConfig(ModConfig.Type.COMMON, BuriedConfig.commonSpec);
@@ -33,5 +33,9 @@ public class BuriedWrecks {
 		if (dist.isClient()) {
 			container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
 		}
+	}
+
+	public static ResourceLocation modLoc(String name) {
+		return ResourceLocation.fromNamespaceAndPath(MOD_ID, name);
 	}
 }
