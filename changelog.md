@@ -1,1 +1,1 @@
-* Initial Multi Loader version
+* Update to 26.2
