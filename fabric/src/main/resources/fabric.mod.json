@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "buriedwrecks",
+  "version": "${version}",
+  "name": "Buried Wrecks",
+  "description": "What sort of music did cave men listen to? Hard Rock!",
+  "authors": [
+    "Mrbysco"
+  ],
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/buriedwrecks",
+    "sources": "https://github.com/Mrbysco/buriedwrecks",
+    "issues": "https://github.com/Mrbysco/buriedwrecks/issues"
+  },
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.mrbysco.buriedwrecks.BuriedWrecksFabric"
+    ],
+    "modmenu": [
+      "com.mrbysco.buriedwrecks.config.BuriedWrecksModIntegration"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.18.4",
+    "minecraft": "~26.1.1",
+    "java": ">=25",
+    "fabric-api": "*",
+    "forgeconfigapiport": ">=26.1"
+  }
+}
+

@@ -23,7 +23,9 @@ jobs:
       - uses: actions/upload-artifact@v5
         with:
           name: build-output
-          path: ./build/libs/*.jar
+          path: |
+            ./forge/build/libs/*.jar
+            ./fabric/build/libs/*.jar
 
   publish-maven:
     needs: build
@@ -42,7 +44,7 @@ jobs:
       - uses: actions/download-artifact@v5
         with:
           name: build-output
-          path: ./build/libs/
+          path: ./
       - name: Publish to maven
         env:
           SAP_SECRET: ${{ secrets.SAP_SECRET }}
@@ -88,7 +90,6 @@ jobs:
       - uses: actions/download-artifact@v5
         with:
           name: build-output
-          path: ./
       - name: Publish To Modrinth
         env:
           MODRINTH_KEY: ${{ secrets.MODRINTH_KEY }}
