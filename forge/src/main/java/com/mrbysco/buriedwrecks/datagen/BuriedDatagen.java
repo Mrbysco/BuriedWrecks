@@ -9,7 +9,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.BiomeTagsProvider;
-import net.minecraft.data.tags.KeyTagProvider;
 import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.tags.BiomeTags;
@@ -71,7 +70,7 @@ public class BuriedDatagen {
 		}
 	}
 
-	public static class BuriedStructureFeatureTagProvider extends KeyTagProvider<Structure> {
+	public static class BuriedStructureFeatureTagProvider extends TagsProvider<Structure> {
 		public BuriedStructureFeatureTagProvider(PackOutput generator, CompletableFuture<Provider> completableFuture) {
 			super(generator, Registries.STRUCTURE, completableFuture, Constants.MOD_ID);
 		}

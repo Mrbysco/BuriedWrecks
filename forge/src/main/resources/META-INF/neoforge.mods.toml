@@ -15,12 +15,12 @@ What sort of music did cave men listen to? Hard Rock!
 [[dependencies.buriedwrecks]]
 modId="minecraft"
 type="REQUIRED"
-versionRange="[26.1.1,)"
+versionRange="[26.2,)"
 ordering="NONE"
 side="BOTH"
 [[dependencies.buriedwrecks]]
 modId="neoforge"
 type="REQUIRED"
-versionRange="[26.1.1.0-alpha,)"
+versionRange="[26.2.0.43-beta,)"
 ordering="NONE"
 side="BOTH"
