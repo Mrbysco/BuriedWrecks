@@ -14,7 +14,7 @@ public class BuriedWrecksNeoForge {
 	public BuriedWrecksNeoForge(ModContainer container, Dist dist) {
 		CommonClass.init();
 
-		container.registerConfig(ModConfig.Type.COMMON, BuriedConfig.commonSpec);
+		container.registerConfig(ModConfig.Type.LOCAL, BuriedConfig.commonSpec);
 
 		if (dist.isClient()) {
 			container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);

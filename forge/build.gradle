@@ -3,7 +3,7 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id "net.neoforged.moddev" version "2.0.143"
+    id "net.neoforged.moddev" version "2.0.147"
     id 'net.darkhax.curseforgegradle'
     id 'com.modrinth.minotaur'
 }
@@ -12,19 +12,14 @@ base {
     archivesName = "${mod_name}-neoforge-${minecraft_version}"
 }
 
-configurations {
-    testmodImplementation.extendsFrom implementation
-}
 neoForge {
     version = "${neo_version}"
 
     // Automatically enable neoforge AccessTransformers if the file exists
-    def at = project(':common').file('src/main/resources/META-INF/accesstransformer.cfg')
+    def at = project(":forge").file('src/main/resources/META-INF/accesstransformer.cfg')
     if (at.exists()) {
-        accessTransformers.add(at.absolutePath)
+        accessTransformers.from(at.absolutePath)
     }
-    def commonResources = project(':common').file("src/main/resources")
-    def commonGenerated = project(':common').file('src/generated/resources/')
 
     runs {
         configureEach { model ->
@@ -49,13 +44,13 @@ neoForge {
 
         data {
             clientData()
-
+            // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
             programArguments.addAll(
                     '--mod', "${mod_id}",
                     '--all',
-                    '--output', commonGenerated.getAbsolutePath(),
+                    '--output', file('../common/src/generated/resources/').getAbsolutePath(),
                     '--existing', file('src/main/resources/').getAbsolutePath(),
-                    '--existing', commonResources.getAbsolutePath()
+                    '--existing', file('../common/src/main/resources/').getAbsolutePath()
             )
         }
     }
@@ -124,12 +119,11 @@ if (System.getenv().CURSEFORGE_KEY) {
         mainFile.addGameVersion('Server', 'Client')
 
         mainFile.changelog = file("$project.rootDir/changelog.md")
-        mainFile.changelogType = 'markdown'
+        mainFile.changelogType = 'markdown'test
     }
 }
 
 if (System.getenv().MODRINTH_KEY) {
-    String fileContents = file("$project.rootDir/changelog.md").text
     modrinth {
         token = System.getenv().MODRINTH_KEY
         projectId = project.modrinth_id
@@ -137,8 +131,11 @@ if (System.getenv().MODRINTH_KEY) {
         versionName = "${mod_name} ${minecraft_version}"
         versionNumber = project.version
         uploadFile = jar
-        changelog = fileContents
+        changelog = file("$project.rootDir/changelog.md").text
         gameVersions = ["${minecraft_version}"]
         loaders = ["neoforge"]
+
+        dependencies {
+        }
     }
 }

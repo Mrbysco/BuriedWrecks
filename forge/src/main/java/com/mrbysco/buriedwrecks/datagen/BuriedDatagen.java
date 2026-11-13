@@ -4,7 +4,6 @@ import com.mrbysco.buriedwrecks.Constants;
 import com.mrbysco.buriedwrecks.registration.ModStructureSets;
 import com.mrbysco.buriedwrecks.registration.ModStructures;
 import net.minecraft.core.HolderLookup.Provider;
-import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
@@ -17,31 +16,29 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
+import net.neoforged.neoforge.data.event.GatherDataRegistryEntriesEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 
 @EventBusSubscriber
 public class BuriedDatagen {
-	public static final RegistrySetBuilder BUILDER = new RegistrySetBuilder()
-			.add(Registries.STRUCTURE, ModStructures::bootstrap)
-			.add(Registries.STRUCTURE_SET, ModStructureSets::bootstrap)
-			.add(Registries.BIOME, $ -> {
-			});
+
+	@SubscribeEvent
+	static void onGatherRegistries(GatherDataRegistryEntriesEvent event) {
+		event.add(Registries.STRUCTURE, ModStructures::bootstrap);
+		event.add(Registries.STRUCTURE_SET, ModStructureSets::bootstrap);
+	}
 
 	@SubscribeEvent
 	public static void gatherData(GatherDataEvent.Client event) {
-		event.createDatapackRegistryObjects(BUILDER);
-
 		DataGenerator generator = event.getGenerator();
 		PackOutput packOutput = generator.getPackOutput();
-		CompletableFuture<Provider> lookupProvider = event.getLookupProvider();
 
-		generator.addProvider(true, new BuriedStructureFeatureTagProvider(packOutput, lookupProvider)
-		);
-		generator.addProvider(true, new BuriedBiomeTagProvider(packOutput, lookupProvider));
+		event.createProvider(BuriedStructureFeatureTagProvider::new);
+		event.createProvider(BuriedBiomeTagProvider::new);
 		generator.addProvider(true, new StructureUpdater("structure/buried_shipwreck", packOutput, event.getResourceManager(PackType.SERVER_DATA)));
-		generator.addProvider(true, new BuriedStructureLanguageProvider(packOutput));
+		event.createProvider(BuriedStructureLanguageProvider::new);
 	}
 
 	public static class BuriedStructureLanguageProvider extends LanguageProvider {

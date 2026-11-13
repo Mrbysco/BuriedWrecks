@@ -18,9 +18,9 @@ import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
-import net.minecraft.world.level.levelgen.structure.StructurePieceAccessor;
 import net.minecraft.world.level.levelgen.structure.TemplateStructurePiece;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
+import net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilder;
 import net.minecraft.world.level.levelgen.structure.templatesystem.BlockIgnoreProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
@@ -69,9 +69,9 @@ public class BuriedShipwreckPieces {
 			"treasure_chest", BuiltInLootTables.SHIPWRECK_TREASURE,
 			"supply_chest", BuiltInLootTables.SHIPWRECK_SUPPLY);
 
-	public static void addPieces(StructureTemplateManager templateManager, BlockPos pos, Rotation rotation, StructurePieceAccessor pieceAccessor, RandomSource randomSource, boolean isBeached) {
+	public static void addPieces(StructureTemplateManager templateManager, BlockPos pos, Rotation rotation, StructurePiecesBuilder builder, RandomSource randomSource, boolean isBeached) {
 		Identifier identifier = Util.getRandom(isBeached ? STRUCTURE_LOCATION_BEACHED : STRUCTURE_LOCATION_OCEAN, randomSource);
-		pieceAccessor.addPiece(new BuriedShipwreckPiece(templateManager, identifier, pos, rotation, isBeached));
+		builder.addPiece(new BuriedShipwreckPiece(templateManager, identifier, pos, rotation, isBeached));
 	}
 
 	public static class BuriedShipwreckPiece extends TemplateStructurePiece {
